@@ -1,0 +1,80 @@
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Terminated_Fear"
+ScreenGui.Parent = PlayerGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.BackgroundTransparency = 1
+Title.Text = "Terminated_Fear"
+Title.TextColor3 = Color3.fromRGB(255, 0, 0)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextScaled = true
+Title.Parent = MainFrame
+local function createButton(text, posY)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 280, 0, 40)
+    btn.Position = UDim2.new(0, 10, 0, posY)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    btn.BorderSizePixel = 0
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextScaled = true
+    btn.Parent = MainFrame
+    return btn
+end
+local autoLaunchBtn = createButton("Auto Launch", 50)
+local autoFlyBtn = createButton("Auto Fly", 100)
+local autoResetBtn = createButton("Auto Reset", 150)
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local teleportHeight = 100000000000
+local autoLaunchEnabled = false
+local autoFlyEnabled = false
+local autoResetEnabled = false
+
+-- Auto Launch function (simulate pressing launch)
+local function autoLaunch()
+    -- replace with the actual launch code in your game
+    print("Rocket Launched!")
+end
+autoLaunchBtn.MouseButton1Click:Connect(function()
+    autoLaunchEnabled = not autoLaunchEnabled
+    if autoLaunchEnabled then
+        autoLaunch()
+    end
+end)
+
+autoFlyBtn.MouseButton1Click:Connect(function()
+    autoFlyEnabled = not autoFlyEnabled
+end)
+
+autoResetBtn.MouseButton1Click:Connect(function()
+    autoResetEnabled = not autoResetEnabled
+end)
+spawn(function()
+    while true do
+        wait(0.5)
+        if autoFlyEnabled then
+            HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + Vector3.new(0, teleportHeight, 0)
+        end
+
+        if autoResetEnabled then
+            -- Reset character when reaching top
+            if HumanoidRootPart.Position.Y >= teleportHeight then
+                LocalPlayer.Character:BreakJoints()
+            end
+        end
+    end
+end)
